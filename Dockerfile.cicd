@@ -1,0 +1,40 @@
+ARG RUBY_VERSION=3.1.1
+FROM ruby:$RUBY_VERSION
+
+# Install libvips for Active Storage preview support
+RUN apt-get update -qq && \
+    apt-get install -y build-essential libvips && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
+
+# Set production environment
+ENV RAILS_LOG_TO_STDOUT="1" \
+    RAILS_SERVE_STATIC_FILES="true" \
+    RAILS_ENV="production" \
+    RACK_ENV="production" \
+    BUNDLE_WITHOUT="development"
+
+WORKDIR /rails
+
+# Install application gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# Copy application code
+COPY . .
+RUN rm -rf ./git
+RUN rm -rf ./docker
+
+RUN bundle config set --local without 'development test'
+RUN bundle install --jobs 20 --retry 5
+
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile --gemfile app/ lib/
+
+# Add a script to be executed every time the container starts.
+COPY docker-entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+EXPOSE 3000
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

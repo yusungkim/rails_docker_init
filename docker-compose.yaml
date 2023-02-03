@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_USERNAME: docker
+      DB_PASSWORD: docker
+      DB_HOST: db
+      DB_NAME: development
+      RAILS_ENV: development
+      RAKE_ENV: development
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/rails
+    networks:
+      - demo
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: development
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    ports:
+      - "3306:3306"
+    volumes:
+      - 'mysqldb:/var/lib/mysql'
+      - ./docker/mysql/conf/:/etc/mysql/conf.d/
+      - ./docker/mysql/initdb/:/docker-entrypoint-initdb.d/
+    networks:
+      - demo
+
+networks:
+  demo:
+
+volumes:
+  mysqldb:
