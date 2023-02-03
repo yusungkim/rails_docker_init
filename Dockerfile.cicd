@@ -26,8 +26,7 @@ COPY . .
 RUN bundle config set --local without 'development test'
 RUN bundle install --jobs 20 --retry 5
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile --gemfile app/ lib/
+RUN bundle exec rake assets:precompile
 
 # Add a script to be executed every time the container starts.
 COPY docker-entrypoint.sh /usr/bin/
