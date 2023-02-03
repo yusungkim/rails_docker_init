@@ -22,8 +22,6 @@ RUN bundle install
 
 # Copy application code
 COPY . .
-RUN rm -rf ./git
-RUN rm -rf ./docker
 
 RUN bundle config set --local without 'development test'
 RUN bundle install --jobs 20 --retry 5
