@@ -13,12 +13,14 @@ services:
       RAKE_ENV: development
     ports:
       - 3000:3000
+    tty: true
     volumes:
       - .:/rails
     networks:
       - demo
     depends_on:
       - db
+
   db:
     image: mysql:5.7
     environment:

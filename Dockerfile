@@ -36,3 +36,4 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 3000
 CMD ["./bin/dev"]
+# CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
