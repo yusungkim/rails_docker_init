@@ -1,24 +1,17 @@
-# README
+```bash
+# install rails and init pj
+gem install rails
+# excluding default testing framework
+rails new twitter-clone -T -d mysql --css tailwind
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# install devise
+rails generate devise:install
+rails g devise user
+rails db:migrate
+rails db:test:prepare
 
-Things you may want to cover:
+# install rspec
+# https://github.com/rspec/rspec-rails/tree/6-0-maintenance
+rails generate rspec:install
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
